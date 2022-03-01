@@ -22,7 +22,7 @@ def Yt(Xnew,Xold):
     return dfdx(Xnew) - dfdx(Xold)
 
 def Pt(s,y):
-    return 1 / (np.transpose(y)*s)
+    return 1 / (y.T.dot(s) + 1e-5)
 
 def Xnew(Xold,H):
     return Xold - np.dot(H,dfdx(Xold))
@@ -32,10 +32,10 @@ def Hnew(Hold,Xnew,Xold):
     st = St(Xnew,Xold)
     yt = Yt(Xnew,Xold)
     p  = Pt(st,yt)
-    A = ((np.eye(len(Hold)) - p*np.dot(st,np.transpose(yt))))
-    B = ((np.eye(len(Hold)) - p*np.dot(yt,np.transpose(st))))
-    C = p*st*np.transpose(st)
-    return A*Hold*B + C
+    A = ((np.eye(len(Hold)) - p*st.dot(yt.T)))
+    B = ((np.eye(len(Hold)) - p*yt.dot(st.T)))
+    C = p*st.dot(st.T)
+    return A.dot(Hold.dot(B)) + C#A*Hold + C#
     
 
 
@@ -48,24 +48,23 @@ print('dy0 = \n', dy0)
 H0 = np.eye(len(x0))
 print('H0 = \n', H0)
 erro  = np.array([[1000],[1000]])
-count = 0
+count = 5
 
-while(count < 2):
-    print('Iteration ', count)
+for i in range(0,count,1):
+    print('Iteration ', i)
     x1 = Xnew(x0,H0)
     dy1 = dfdx(x1)
     erro = dy1
+        
     y1 = dy1 - dy0
     H1 = Hnew(H0,x1,x0)
 
     x0 = x1
-    print('x0 = \n', x0)
     y0 = y1
-    print('y0 = \n', y0)
     H0 = H1
-    print('H0 = \n', H0)
-    count = count+1
 
 
-
-
+print('x0    = \n', x0)
+print('f(x0) = \n', function(x0))
+print('H0 = \n', H0)
+print('Erro = \n', erro)
