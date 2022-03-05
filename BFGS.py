@@ -10,10 +10,11 @@ Created on Tue Mar  1 13:46:52 2022
 import numpy as np
 
 def function(x):
-    return x[0]**2 + 0.5*x[1]**2 + 3
-
+    # return x[0]**2 + 0.5*x[1]**2 + 3
+    return  x[0]**2 + x[1]**2 - 4
 def dfdx(x):
-    return np.array([2*x[0], x[1]])
+    # return np.array([2*x[0], x[1]])
+    return np.array([2*x[0], 2*x[1]])
 
 def St(Xnew,Xold):
     return Xnew - Xold
@@ -65,6 +66,9 @@ for i in range(0,count,1):
 
 
 print('x0    = \n', x0)
-print('f(x0) = \n', function(x0))
+print('------------------------------------------')
+print('f(x0) =', function(x0))
+print('------------------------------------------')
 print('H0 = \n', H0)
+print('------------------------------------------')
 print('Erro = \n', erro)
